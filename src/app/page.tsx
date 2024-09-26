@@ -1,19 +1,23 @@
 "use client";
 
+import { SelectAdvocates } from "@/db/schema";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState([]);
+  const [advocates, setAdvocates] = useState<SelectAdvocates[]>([]);
+  const [filteredAdvocates, setFilteredAdvocates] = useState<SelectAdvocates[]>(
+    []
+  );
 
   useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
-      });
-    });
+    async function fetchAdvocates() {
+      console.log("fetching advocates...");
+      const response = await fetch("/api/advocates");
+      const jsonResponse: { data: SelectAdvocates[] } = await response.json();
+      setAdvocates(jsonResponse.data);
+      setFilteredAdvocates(jsonResponse.data);
+    }
+    fetchAdvocates();
   }, []);
 
   const onChange = (e) => {
@@ -29,7 +33,7 @@ export default function Home() {
         advocate.city.includes(searchTerm) ||
         advocate.degree.includes(searchTerm) ||
         advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
+        String(advocate.yearsOfExperience).includes(searchTerm)
       );
     });
 
