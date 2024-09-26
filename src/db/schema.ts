@@ -1,4 +1,4 @@
-import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import {
   pgTable,
   integer,
@@ -23,5 +23,5 @@ const advocates = pgTable("advocates", {
 
 export { advocates };
 
-export type InsertAdvocate = InferInsertModel<typeof advocates>;
-export type SelectAdvocates = InferSelectModel<typeof advocates>;
+export type InsertAdvocate = typeof advocates.$inferInsert;
+export type SelectAdvocates = typeof advocates.$inferSelect;
